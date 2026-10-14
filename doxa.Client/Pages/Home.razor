@@ -1,0 +1,108 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.SignalR.Client
+@using doxa.Shared.Models
+@inject NavigationManager NavManager
+@implements IAsyncDisposable
+
+<div class="slack-container">
+
+    <div class="workspaces-sidebar">
+        <div class="workspace-icon">MW</div>
+    </div>
+
+    <div class="channels-sidebar">
+        <div class="channels-header">Mon Workspace</div>
+        <div class="channel-item active"># général</div>
+        <div class="channel-item"># random</div>
+        <div class="channel-item"># .net-10-dev</div>
+    </div>
+
+    <div class="chat-area">
+        <div class="chat-header">
+            # général
+        </div>
+
+        <div class="messages-list">
+            @foreach (var message in _messages)
+            {
+                <div class="message-bubble">
+                    <div class="message-user">
+                        @message.User 
+                        <span class="message-time">@message.Timestamp.ToShortTimeString()</span>
+                    </div>
+                    <div class="message-content">@message.Content</div>
+                </div>
+            }
+        </div>
+
+        <div class="chat-input-container">
+            <input @bind="_currentMessageInput" 
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyPress"
+                   type="text" 
+                   class="chat-input-box" 
+                   placeholder="Envoyer un message dans # général" />
+        </div>
+    </div>
+
+</div>
+
+@code {
+    private HubConnection? _hubConnection;
+    private List<ChatMessage> _messages = new();
+    private string _currentMessageInput = string.Empty;
+    private string _currentUser = "Développeur C#"; // tmp user
+    private Guid _currentChannelId = Guid.Empty;   // TODO BDD
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("http://localhost:5289/chathub") 
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On<ChatMessage>("ReceiveMessage", (message) =>
+        {
+            _messages.Add(message);
+            StateHasChanged(); 
+        });
+
+        await _hubConnection.StartAsync();
+
+        await _hubConnection.SendAsync("JoinChannel", _currentChannelId.ToString());
+    }
+
+    private async Task SendMessage()
+    {
+        if (_hubConnection is not null && !string.IsNullOrWhiteSpace(_currentMessageInput))
+        {
+            var newMessage = new ChatMessage
+            {
+                User = _currentUser,
+                Content = _currentMessageInput,
+                ChannelId = _currentChannelId,
+                Timestamp = DateTime.UtcNow
+            };
+
+            await _hubConnection.SendAsync("SendMessage", newMessage);
+            _currentMessageInput = string.Empty;
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendMessage();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+}
+

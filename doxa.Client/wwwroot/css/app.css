@@ -1,0 +1,166 @@
+:root {
+  --slack-purple: #3f0e40;
+  --slack-dark-hover: #350d36;
+  --slack-border: #d1d1d1;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+}
+
+.slack-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.workspaces-sidebar {
+  width: 70px;
+  background-color: #270628;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15px;
+  gap: 15px;
+}
+
+.workspace-icon {
+  width: 44px;
+  height: 44px;
+  background-color: #522653;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.channels-sidebar {
+  width: 240px;
+  background-color: var(--slack-purple);
+  color: #bcabbd;
+  padding: 15px 0;
+}
+
+.channels-header {
+  padding: 0 15px 15px 15px;
+  color: white;
+  font-weight: bold;
+  border-bottom: 1px solid #522653;
+}
+
+.channel-item {
+  padding: 8px 20px;
+  cursor: pointer;
+}
+
+.channel-item:hover,
+.channel-item.active {
+  background-color: var(--slack-dark-hover);
+  color: white;
+}
+
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--slack-border);
+  font-weight: bold;
+}
+
+.messages-list {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message-bubble {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-user {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.message-time {
+  font-weight: normal;
+  color: #616061;
+  font-size: 0.75rem;
+  margin-left: 8px;
+}
+
+.message-content {
+  font-size: 0.95rem;
+}
+
+.chat-input-container {
+  padding: 20px;
+}
+
+.chat-input-box {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--slack-border);
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  aspect-ratio: 1;
+  --_g: no-repeat radial-gradient(farthest-side, #000 90%, #0000);
+  background: var(--_g), var(--_g), var(--_g);
+  background-size: 25% 25%;
+  animation: l17 1s infinite;
+}
+
+@keyframes l17 {
+  0% {
+    background-position: 0% -100%, 50% -100%, 100% -100%
+  }
+
+  16.67% {
+    background-position: 0% 50%, 50% -100%, 100% -100%
+  }
+
+  33.33% {
+    background-position: 0% 50%, 50% 50%, 100% -100%
+  }
+
+  45%,
+  55% {
+    background-position: 0% 50%, 50% 50%, 100% 50%
+  }
+
+  66.67% {
+    background-position: 0% 200%, 50% 50%, 100% 50%
+  }
+
+  83.33% {
+    background-position: 0% 200%, 50% 200%, 100% 50%
+  }
+
+  100% {
+    background-position: 0% 200%, 50% 200%, 100% 200%
+  }
+}

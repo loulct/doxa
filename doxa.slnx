@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="doxa.Client/doxa.Client.csproj" />
+  <Project Path="doxa.Server/doxa.Server.csproj" />
+  <Project Path="doxa.Shared/doxa.Shared.csproj" />
+</Solution>
